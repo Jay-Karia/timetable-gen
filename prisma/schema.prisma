@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model chats {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int      @map("__v")
+  chatName      String
+  createdAt     DateTime @db.Date
+  groupAdmin    String?  @db.ObjectId
+  isGroupChat   Boolean
+  latestMessage String   @db.ObjectId
+  updatedAt     DateTime @db.Date
+  users         String[]
+}
+
+model messages {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  chat      String   @db.ObjectId
+  content   String
+  createdAt DateTime @db.Date
+  sender    String   @db.ObjectId
+  updatedAt DateTime @db.Date
+}
+
+model tables {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @ignore @db.Date
+  data      Json
+  division  String
+  standard  String
+  title     String
+  updatedAt DateTime @db.Date
+}
+
+model teachers {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @ignore @db.Date
+  firstName String
+  lastName  String
+  table     String
+  updatedAt DateTime @db.Date
+}
+
+model users {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  createdAt DateTime @db.Date
+  email     String   @unique(map: "email_1")
+  name      String
+  password  String
+  picture   String?
+  updatedAt DateTime @db.Date
+}
