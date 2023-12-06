@@ -1,6 +1,6 @@
 function DashboardLayout({children}) {
     return (
-        <div>
+        <div className={'h-full'}>
             {children}
         </div>
     );
