@@ -1,11 +1,11 @@
 import React from 'react';
-import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 
-function DashboardPage(props) {
+async function DashboardPage() {
+    const data = auth();
     return (
         <div>
             dashboard
-            <UserButton afterSignOutUrl="/"/>
         </div>
     );
 }
