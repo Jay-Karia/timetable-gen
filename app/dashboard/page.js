@@ -9,7 +9,7 @@ function DashboardPage({searchParams}) {
     return (
         <div className={"h-full lg:flex"}>
             <SideBar/>
-            <MainArea page={searchParams.page}/>
+            <MainArea page={searchParams.page} table={searchParams.table}/>
         </div>
     );
 }

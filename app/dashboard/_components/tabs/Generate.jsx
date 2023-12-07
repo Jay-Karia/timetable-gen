@@ -3,7 +3,7 @@ import React from 'react';
 function Generate(props) {
     return (
         <div className={"h-full"}>
-            Generate
+            <h1 className={"text-xl font-bold"}>Generate</h1>
         </div>
     );
 }
