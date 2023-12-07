@@ -2,7 +2,7 @@ import React from 'react';
 
 function AllTeachers(props) {
     return (
-        <div>
+        <div className={"h-full"}>
             All Teachers
         </div>
     );

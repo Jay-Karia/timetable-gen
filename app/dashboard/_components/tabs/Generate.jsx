@@ -2,7 +2,7 @@ import React from 'react';
 
 function Generate(props) {
     return (
-        <div>
+        <div className={"h-full"}>
             Generate
         </div>
     );

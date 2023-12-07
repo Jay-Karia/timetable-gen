@@ -2,7 +2,7 @@ import React from 'react';
 
 function AllTables(props) {
     return (
-        <div>
+        <div className={"h-full"}>
             All Tables
         </div>
     );
