@@ -12,6 +12,7 @@ import {
 import {Toaster, toast} from "react-hot-toast";
 import {useRouter} from "next/navigation";
 import ScrollableFeed from "react-scrollable-feed";
+import toastOptions from "../../../../config/toastOptions";
 
 function AllTeachers(props) {
     const [teachers, setTeachers] = useState(null);
@@ -20,16 +21,7 @@ function AllTeachers(props) {
 
     const handleTableClick = (table) => {
         if (table.length === 0) {
-            toast.error("No table Found!", {
-                style: {
-                    border: "1px solid #2a0202",
-                    color: "#9b1515",
-                },
-                iconTheme: {
-                    primary: "#9b1515",
-                    secondary: "#FFFAEE",
-                },
-            });
+            toast.error("No table Found!", toastOptions.error);
         } else {
             const id = table.id;
             const url = `/dashboard?table=${id}`;
@@ -69,58 +61,21 @@ function AllTeachers(props) {
     const handleRemove = async (teacher) => {
         const id = teacher.id;
         try {
-            toast.success("Removing teacher", {
-                icon: "⭕",
-                style: {
-                    border: "1px solid #713200",
-                    color: "#713200",
-                },
-                iconTheme: {
-                    primary: "#713200",
-                    secondary: "#FFFAEE",
-                },
-            });
+            toast.success("Removing teacher", toastOptions.loading);
             const res = await fetch(`/api/teacher`, {
                 method: "DELETE",
                 body: JSON.stringify({id}),
             });
             const data = await res.json();
             if (data.status === "success") {
-                toast.success("Teacher removed!", {
-                    style: {
-                        border: "1px solid #022a09",
-                        color: "#054b11",
-                    },
-                    iconTheme: {
-                        primary: "#054b11",
-                        secondary: "#FFFAEE",
-                    },
-                });
+                toast.success("Teacher removed!", toastOptions.success);
                 setTeachers(teachers.filter((teacher) => teacher.id !== id));
                 localStorage.setItem("teachers", JSON.stringify(teachers.filter((teacher) => teacher.id !== id)));
             } else {
-                toast.error("Could not remove teacher!", {
-                    style: {
-                        border: "1px solid #2a0202",
-                        color: "#9b1515",
-                    },
-                    iconTheme: {
-                        primary: "#9b1515",
-                        secondary: "#FFFAEE",
-                    },
-                });
+                toast.error("Could not remove teacher!", toastOptions.error);
             }
         } catch (e) {
-            toast.error("Could not remove teacher!", {
-                style: {
-                    border: "1px solid #2a0202",
-                    color: "#9b1515",
-                },
-                iconTheme: {
-                    primary: "#9b1515",
-                    secondary: "#FFFAEE",
-                },
-            });
+            toast.error("Could not remove teacher!", toastOptions.error);
         }
     };
 
@@ -128,17 +83,7 @@ function AllTeachers(props) {
         const firstName = document.getElementById("fName").value;
         const lastName = document.getElementById("lName").value;
         try {
-            toast.success("Adding teacher", {
-                icon: "⭕",
-                style: {
-                    border: "1px solid #713200",
-                    color: "#713200",
-                },
-                iconTheme: {
-                    primary: "#713200",
-                    secondary: "#FFFAEE",
-                },
-            });
+            toast.success("Adding teacher", toastOptions.loading);
             const res = await fetch(`/api/teacher`, {
                 method: "POST",
                 body: JSON.stringify({
@@ -148,41 +93,14 @@ function AllTeachers(props) {
             });
             const data = await res.json();
             if (data.status === "success") {
-                toast.success("Teacher added!", {
-                    style: {
-                        border: "1px solid #022a09",
-                        color: "#054b11",
-                    },
-                    iconTheme: {
-                        primary: "#054b11",
-                        secondary: "#FFFAEE",
-                    },
-                });
+                toast.success("Teacher added!", toastOptions.success);
                 setTeachers([...teachers, data.teacher]);
                 localStorage.setItem("teachers", JSON.stringify([...teachers, data.teacher]));
             } else {
-                toast.error("Could not add Teacher!", {
-                    style: {
-                        border: "1px solid #2a0202",
-                        color: "#9b1515",
-                    },
-                    iconTheme: {
-                        primary: "#9b1515",
-                        secondary: "#FFFAEE",
-                    },
-                });
+                toast.error("Could not add Teacher!", toastOptions.error);
             }
         } catch (e) {
-            toast.error("Could not add teacher!", {
-                style: {
-                    border: "1px solid #2a0202",
-                    color: "#9b1515",
-                },
-                iconTheme: {
-                    primary: "#9b1515",
-                    secondary: "#FFFAEE",
-                },
-            });
+            toast.error("Could not add teacher!", toastOptions.error);
         }
     };
 
