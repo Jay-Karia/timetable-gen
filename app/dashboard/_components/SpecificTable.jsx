@@ -13,7 +13,6 @@ function SpecificTable({id}) {
                 setLoading(true)
                 const res = await fetch(`/api/table/${id}`);
                 const data = await res.json();
-                console.log(JSON.stringify(data))
                 if (data.status === "success") {
                     setTable(data.table)
                     setHeader("")
@@ -40,7 +39,7 @@ function SpecificTable({id}) {
                 <Table key={table.id} aria-label="Example static collection table" className={"mt-2"}>
                     <TableHeader className={"bg-slate-700"}>
                         {table.data[0].map((row) => (
-                            <TableColumn key={row}>{row}</TableColumn>
+                            <TableColumn>{row}</TableColumn>
                         ))}
 
                     </TableHeader>
@@ -48,7 +47,7 @@ function SpecificTable({id}) {
                         {table.data.slice(1).map((row) => (
                             <TableRow>
                                 {row.map((cell) => (
-                                    <TableCell key={cell}>{cell}</TableCell>
+                                    <TableCell >{cell}</TableCell>
                                 ))}
                             </TableRow>
                         ))}

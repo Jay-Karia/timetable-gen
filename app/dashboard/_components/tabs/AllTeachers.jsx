@@ -41,14 +41,20 @@ function AllTeachers(props) {
         async function fetchTeachers() {
             try {
                 setLoading(true);
-                const res = await fetch("/api/teacher", {
-                    cache: "force-cache",
-                    method: "GET",
-                });
-                const data = await res.json();
+                const localTeachers = localStorage.getItem("teachers");
+                if (localTeachers) {
+                    setTeachers(JSON.parse(localTeachers));
+                } else {
+                    const res = await fetch("/api/teacher", {
+                        cache: "force-cache",
+                        method: "GET",
+                    });
+                    const data = await res.json();
 
-                if (data.status === "success") {
-                    setTeachers(data.teachers);
+                    if (data.status === "success") {
+                        setTeachers(data.teachers);
+                        localStorage.setItem("teachers", JSON.stringify(data.teachers));
+                    }
                 }
             } catch (e) {
                 console.log(e);
@@ -91,6 +97,7 @@ function AllTeachers(props) {
                     },
                 });
                 setTeachers(teachers.filter((teacher) => teacher.id !== id));
+                localStorage.setItem("teachers", JSON.stringify(teachers.filter((teacher) => teacher.id !== id)));
             } else {
                 toast.error("Could not remove teacher!", {
                     style: {
@@ -152,6 +159,7 @@ function AllTeachers(props) {
                     },
                 });
                 setTeachers([...teachers, data.teacher]);
+                localStorage.setItem("teachers", JSON.stringify([...teachers, data.teacher]));
             } else {
                 toast.error("Could not add Teacher!", {
                     style: {

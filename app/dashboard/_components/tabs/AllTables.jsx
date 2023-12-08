@@ -20,11 +20,17 @@ function AllTables(props) {
         async function fetchTables() {
             try {
                 setLoading(true)
-                const res = await fetch("/api/table", {cache: "force-cache"})
-                const data = await res.json()
+                const localTables = localStorage.getItem("tables")
+                if (localTables) {
+                    setTables(JSON.parse(localTables))
+                } else {
+                    const res = await fetch("/api/table", {cache: "force-cache"})
+                    const data = await res.json()
 
-                if (data.status === "success") {
-                    setTables(data.tables)
+                    if (data.status === "success") {
+                        setTables(data.tables)
+                        localStorage.setItem("tables", JSON.stringify(data.tables))
+                    }
                 }
             } catch (e) {
                 console.log(e)
@@ -53,7 +59,7 @@ function AllTables(props) {
                              }}>
                             <h1 className={"text-md"}><span
                                 className={"font-bold"}>{table.title}</span> {table.standard}-{table.division}</h1>
-                            <Table key={table.id} aria-label="Example static collection table" className={"mt-2"}>
+                            <Table aria-label="Example static collection table" className={"mt-2"}>
                                 <TableHeader className={"bg-slate-700"}>
                                     {table.data[0].map((row) => (
                                         <TableColumn>{row}</TableColumn>
