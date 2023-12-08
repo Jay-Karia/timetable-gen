@@ -43,7 +43,7 @@ function AllTables(props) {
             {loading && <div className={"flex justify-center items-center h-full"}>
                 <h1 className={"text-2xl font-bold"}>Loading...</h1>
             </div>}
-            {!loading && <ScrollableFeed className={"pb-44 overflow-y-scroll"}>
+            {!loading && <ScrollableFeed className={"h-96 pb-44 overflow-y-scroll"}>
                 {tables.length > 0 && <div className={"grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-4"}>
                     {tables.map((table) => (
                         <div key={table.id}

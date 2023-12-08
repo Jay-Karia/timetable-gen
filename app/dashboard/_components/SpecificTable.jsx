@@ -31,7 +31,7 @@ function SpecificTable({id}) {
 
     return (
         <div className={"flex h-full w-full"}>
-            {loading ? <div className={"flex justify-center items-center h-full"}>
+            {loading ? <div className={"flex justify-center items-center h-full w-full"}>
                 <h1 className={"text-2xl font-bold items-center"}>Loading...</h1>
             </div>: <h1 className={"text-xl font-bold"}>{header}</h1>}
              {table ? <div>

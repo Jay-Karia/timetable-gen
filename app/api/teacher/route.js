@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
-import prisma from "@/prisma/client";
+import {PrismaClient} from "@prisma/client";
 
+const prisma = new PrismaClient();
 export async function DELETE(req) {
     const {id} = await req.json();
     try {
@@ -47,7 +48,13 @@ const {firstName, lastName} = await req.json();
                 updatedAt: new Date(),
             }
         });
-        return NextResponse.json({msg: "Teacher added successfully", status: "success"});
+        const newTeacher = await prisma.teachers.findFirst({
+            where: {
+                firstName: firstName,
+                lastName: lastName
+            }
+        });
+        return NextResponse.json({msg: "Teacher added successfully", status: "success", teacher: newTeacher});
     } catch (error) {
         return NextResponse.json({msg: "Could not add teacher", status: "error"});
     }
