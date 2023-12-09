@@ -1,6 +1,16 @@
 "use client"
 import React, {useEffect, useState} from 'react';
-import {Button, Divider, Input} from "@nextui-org/react";
+import {
+    Button,
+    Divider,
+    Input,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from "@nextui-org/react";
 import CustomInput from "../CustomInput";
 import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
@@ -12,8 +22,8 @@ function Generate(props) {
 
     const [subjects, setSubjects] = useState([]);
     const [teachers, setTeachers] = useState([])
-    const [selectedTeachers, setSelectedTeachers] = useState([])
     const [addTeacher, setAddTeacher] = useState("")
+    const [table, setTable] = useState(null)
 
     const days = [
         {title: "Monday", default: "8"},
@@ -25,9 +35,7 @@ function Generate(props) {
         {title: "Sunday", default: "0"},
     ]
 
-    const secondaryColors = [
-        "bg-blue-100", "bg-green-100", "bg-yellow-100", "bg-red-100", "bg-indigo-100", "bg-pink-100", "bg-purple-100", "bg-gray-100"
-    ]
+    const colors = ["bg-slate-200", "bg-slate-300", "bg-slate-400"]
 
     const addSubject = (subject) => {
         subject.consecutive = subject.consecutive.getAttribute("data-selected") !== null
@@ -105,6 +113,10 @@ function Generate(props) {
         }
     }
 
+    const generateTable = ()=> {
+
+    }
+
     useEffect(() => {
         const localSubject = localStorage.getItem("subjects") === null ?
             []
@@ -142,7 +154,7 @@ function Generate(props) {
             <h1 className={"text-xl font-bold"}>Generate</h1>
             <ScrollableFeed className={"h-full pb-40 overflow-y-scroll"}>
                 <div className={" flex flex-col py-7 gap-7"}>
-                    <div className={"flex flex-row gap-4 "}>
+                    <div className={"flex gap-4 "}>
                         <Input
                             label="Title (Optional)"
                             variant="faded"
@@ -225,7 +237,8 @@ function Generate(props) {
 
                                             <Card key={index} className={"max-w-xs hover:bg-slate-50 w-96"}>
                                                 <CardHeader
-                                                    className={`flex gap-3 ${secondaryColors[Math.floor(Math.random() * 7)]}`}>
+                                                    className={`flex gap-3 ${colors[index % colors.length]}`}>
+
                                                     <Input variant={"bordered"} className="text-xl font-medium"
                                                            onChange={(e) => {
                                                                handleChange(e, subject, index, false)
@@ -281,6 +294,37 @@ function Generate(props) {
                                     <p className={"text-md font-medium"}>No subjects added</p>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                    <div className={"space-y-4"}>
+                        <h1 className={"font-semibold"}>Table</h1>
+                        <Button color={"secondary"} onClick={generateTable}>Generate</Button>
+                        <div>
+                            {table ? (
+                                <>
+                                    <div>
+                                        <h1 className={"text-md"}><span
+                                            className={"font-bold"}>{table.title}</span> {table.standard}-{table.division}</h1>
+                                        <Table key={table.id} aria-label="Example static collection table" className={"mt-2"}>
+                                            <TableHeader className={"bg-slate-700"}>
+                                                {table.data[0].map((row) => (
+                                                    <TableColumn>{row}</TableColumn>
+                                                ))}
+
+                                            </TableHeader>
+                                            <TableBody>
+                                                {table.data.slice(1).map((row) => (
+                                                    <TableRow>
+                                                        {row.map((cell) => (
+                                                            <TableCell >{cell}</TableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                </>
+                            ) : ""}
                         </div>
                     </div>
                 </div>

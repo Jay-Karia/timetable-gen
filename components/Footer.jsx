@@ -2,7 +2,7 @@ import {Link} from "@nextui-org/react";
 
 function Footer() {
     return (
-        <div className={"absolute border-2 p-3 bottom-0 w-full bg-slate-50"}>
+        <div className={"absolute border-2 p-3 bottom-0 w-full bg-slate-50 z-20"}>
                 <h3 className="text-md float-right">
                     developed by{' '}
                     <Link underline={"hover"} target={"_blank"} href="https://github.com/Jay-Karia" className="text-md">
