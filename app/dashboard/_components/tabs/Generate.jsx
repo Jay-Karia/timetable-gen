@@ -14,7 +14,10 @@ import {
 import CustomInput from "../CustomInput";
 import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
-import DeleteIcon from "../../_components/DeleteIcon";
+import DeleteIcon from "../../../../icons/DeleteIcon";
+import DownloadIcon from "../../../../icons/DownloadIcon";
+import SaveIcon from "../../../../icons/SaveIcon";
+import RegenerateIcon from "../../../../icons/RegenerateIcon";
 import {Checkbox} from "@nextui-org/react";
 import ScrollableFeed from "react-scrollable-feed";
 
@@ -23,7 +26,15 @@ function Generate(props) {
     const [subjects, setSubjects] = useState([]);
     const [teachers, setTeachers] = useState([])
     const [addTeacher, setAddTeacher] = useState("")
-    const [table, setTable] = useState(null)
+    const [table, setTable] = useState({
+        "id": "656f48a5233e1a9542325ce5",
+        "createdAt": "2023-12-05T15:58:29.169Z",
+        "data": [["Periods ", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", ""], ["Period 1", "chemistry", "engII", "engII", "chemistry", "chemistry", "computer", ""], ["Period 2", "maths", "maths", "chemistry", "computer", "physics", "engI", ""], ["Period 3", "chemistry", "physics", "maths", "engII", "chemistry", "physics", ""], ["Period 4", "PT", "maths", "chemistry", "chemistry", "engII", "engII", ""], ["Period 5", "engI", "chemistry", "physics", "engI", "computer", "physics", ""], ["Period 6", "computer", "engI", "engI", "maths", "engI", "maths", ""], ["Period 7", "computer", "chemistry", "maths", "physics", "physics", "", ""], ["Period 8", "engII", "computer", "physics", "maths", "maths", "", ""]],
+        "division": "A",
+        "standard": "11",
+        "title": "new title +1234+",
+        "updatedAt": "2023-12-05T15:58:29.169Z"
+    })
 
     const days = [
         {title: "Monday", default: "8"},
@@ -113,10 +124,6 @@ function Generate(props) {
         }
     }
 
-    const generateTable = ()=> {
-        console.log()
-    }
-
     useEffect(() => {
         const localSubject = localStorage.getItem("subjects") === null ?
             []
@@ -147,6 +154,18 @@ function Generate(props) {
 
         fetchTeachers()
     }, []);
+
+    const generateTable = () => {
+        alert("generate")
+    }
+
+    const handleSave = () => {
+        alert("save")
+    }
+
+    const handleDownload = () => {
+        alert("download")
+    }
 
     return (
         <div className={"h-full"}>
@@ -301,10 +320,12 @@ function Generate(props) {
                         <div>
                             {table ? (
                                 <>
-                                    <div>
+                                    <div className={"m-4"}>
                                         <h1 className={"text-md"}><span
-                                            className={"font-bold"}>{table.title}</span> {table.standard}-{table.division}</h1>
-                                        <Table key={table.id} aria-label="Example static collection table" className={"mt-2"}>
+                                            className={"font-bold"}>{table.title}</span> {table.standard}-{table.division}
+                                        </h1>
+                                        <Table key={table.id} aria-label="Example static collection table"
+                                               className={"mt-2"}>
                                             <TableHeader className={"bg-slate-700"}>
                                                 {table.data[0].map((row) => (
                                                     <TableColumn>{row}</TableColumn>
@@ -315,12 +336,23 @@ function Generate(props) {
                                                 {table.data.slice(1).map((row) => (
                                                     <TableRow>
                                                         {row.map((cell) => (
-                                                            <TableCell >{cell}</TableCell>
+                                                            <TableCell>{cell}</TableCell>
                                                         ))}
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
                                         </Table>
+                                        <div className={"flex flex-wrap gap-4 my-4 justify-between"}>
+                                            <div className={"flex items-center gap-4"}>
+                                                <Button color={"primary"} variant={"ghost"} onClick={handleSave}
+                                                        startContent={<SaveIcon/>}>Save</Button>
+                                                <Button color={"primary"} variant={"ghost"}
+                                                        startContent={<RegenerateIcon/>}
+                                                        onClick={generateTable}>Regenerate</Button>
+                                            </div>
+                                            <Button color={"primary"} variant={"bordered"} onClick={handleDownload}
+                                                    startContent={<DownloadIcon/>}>Download</Button>
+                                        </div>
                                     </div>
                                 </>
                             ) : ""}
