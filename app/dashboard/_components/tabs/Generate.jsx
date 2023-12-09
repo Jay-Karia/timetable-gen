@@ -18,6 +18,7 @@ import DeleteIcon from "../../../../icons/DeleteIcon";
 import DownloadIcon from "../../../../icons/DownloadIcon";
 import SaveIcon from "../../../../icons/SaveIcon";
 import RegenerateIcon from "../../../../icons/RegenerateIcon";
+import AddIcon from "../../../../icons/AddIcon";
 import {Checkbox} from "@nextui-org/react";
 import ScrollableFeed from "react-scrollable-feed";
 
@@ -35,6 +36,7 @@ function Generate(props) {
         "title": "new title +1234+",
         "updatedAt": "2023-12-05T15:58:29.169Z"
     })
+    const [loading, setLoading] = useState(false)
 
     const days = [
         {title: "Monday", default: "8"},
@@ -155,8 +157,36 @@ function Generate(props) {
         fetchTeachers()
     }, []);
 
-    const generateTable = () => {
-        alert("generate")
+    const generateTable = async () => {
+        try {
+            setLoading(true)
+            const title = document.getElementById("title").value
+            const standard = document.getElementById("standard").value
+            const division = document.getElementById("division").value
+            const subjects = JSON.parse(localStorage.getItem("subjects"))
+
+            let maxPeriods = []
+            days.forEach((day) => {
+                maxPeriods.push(document.getElementById(day.title).value)
+            })
+            const body = JSON.stringify({
+                title,
+                standard,
+                division,
+                subjects,
+                maxPeriods,
+            })
+
+            const res = await fetch("/api/table/generate", {
+                method: "POST",
+                body: body
+            });
+            const data = await res.json();
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleSave = () => {
@@ -179,8 +209,9 @@ function Generate(props) {
                             placeholder="Enter title"
                             labelPlacement={"inside"}
                             className="max-w-xs"
+                            id={"title"}
                         />
-                        <CustomInput type={"number"} label={"Standard"} placeholder={"1"} variant={"faded"}/>
+                        <CustomInput type={"number"} label={"Standard"} placeholder={"1"} id={"standard"} variant={"faded"}/>
                         <Input
                             type="text"
                             label="Division"
@@ -188,15 +219,16 @@ function Generate(props) {
                             placeholder="A"
                             labelPlacement="inside"
                             className={"w-28"}
+                            id={"division"}
                         />
                     </div>
                     <div>
                         <h1 className={"font-semibold"}>Max Periods</h1>
                         <div className={"gap-4 mt-4 flex flex-wrap"}>
                             {days.map((day, index) => (
-                                <CustomInput key={day.title} type={"number"} label={day.title} variant={"flat"}
+                                <CustomInput key={day.title} id={day.title} type={"number"} label={day.title} variant={"flat"}
                                              defaultValue={day.default}
-                                             color={"secondary"}/>
+                                             color={"default"}/>
                             ))}
                         </div>
                     </div>
@@ -239,7 +271,7 @@ function Generate(props) {
                                                 <Checkbox id={"consecutive"} className={"mt-4"}>Consecutive</Checkbox>
                                             </CardBody>
                                             <CardFooter className={"flex justify-between"}>
-                                                <Button color={"success"} variant={"solid"} onClick={() => {
+                                                <Button startContent={<AddIcon/>} color={"success"} variant={"solid"} onClick={() => {
                                                     addSubject({
                                                         subject: document.getElementById("subject").value,
                                                         daily: document.getElementById("daily").value,
@@ -316,7 +348,7 @@ function Generate(props) {
                     </div>
                     <div className={"space-y-4"}>
                         <h1 className={"font-semibold"}>Table</h1>
-                        <Button color={"secondary"} onClick={generateTable}>Generate</Button>
+                        <Button startContent={<RegenerateIcon/>} color={"secondary"} onClick={generateTable}>Generate</Button>
                         <div>
                             {table ? (
                                 <>
