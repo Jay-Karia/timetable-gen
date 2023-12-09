@@ -6,6 +6,7 @@ import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 import DeleteIcon from "../../_components/DeleteIcon";
 import {Checkbox} from "@nextui-org/react";
+import ScrollableFeed from "react-scrollable-feed";
 
 function Generate(props) {
 
@@ -139,121 +140,64 @@ function Generate(props) {
     return (
         <div className={"h-full"}>
             <h1 className={"text-xl font-bold"}>Generate</h1>
-            <div className={" flex flex-col py-7 gap-7"}>
-                <div className={"flex flex-row gap-4 "}>
-                    <Input
-                        label="Title (Optional)"
-                        variant="faded"
-                        placeholder="Enter title"
-                        labelPlacement={"inside"}
-                        className="max-w-xs"
-                    />
-                    <CustomInput type={"number"} label={"Standard"} placeholder={"1"} variant={"faded"}/>
-                    <Input
-                        type="text"
-                        label="Division"
-                        variant={"faded"}
-                        placeholder="A"
-                        labelPlacement="inside"
-                        className={"w-28"}
-                    />
-                </div>
-                <div>
-                    <h1 className={"font-semibold"}>Max Periods</h1>
-                    <div className={"flex flex-row gap-4 mt-4"}>
-                        {days.map((day, index) => (
-                            <CustomInput key={day.title} type={"number"} label={day.title} variant={"flat"}
-                                         defaultValue={day.default}
-                                         color={"secondary"}/>
-                        ))}
+            <ScrollableFeed className={"h-full pb-40 overflow-y-scroll"}>
+                <div className={" flex flex-col py-7 gap-7"}>
+                    <div className={"flex flex-row gap-4 "}>
+                        <Input
+                            label="Title (Optional)"
+                            variant="faded"
+                            placeholder="Enter title"
+                            labelPlacement={"inside"}
+                            className="max-w-xs"
+                        />
+                        <CustomInput type={"number"} label={"Standard"} placeholder={"1"} variant={"faded"}/>
+                        <Input
+                            type="text"
+                            label="Division"
+                            variant={"faded"}
+                            placeholder="A"
+                            labelPlacement="inside"
+                            className={"w-28"}
+                        />
                     </div>
-                </div>
-                <div>
-                    <h1 className={"font-semibold"}>Subjects</h1>
-                    <div className={"flex gap-4"}>
-                        <div className={"grid grid-cols-4 gap-4 mt-4"}>
-                            {subjects ? (
-                                <>
-                                    <Card className={"max-w-xs hover:bg-slate-50 w-96"}>
-                                        <CardHeader className={`flex gap-3`}>
-                                            <p className="text-md font-medium">Add Subject</p>
-                                        </CardHeader>
-                                        <Divider/>
-                                        <CardBody>
-                                            <Input label="Subject" id={"subject"}/>
-                                            <div className={"flex gap-4 my-4"}>
-                                                <Input label="Daily Max" id={"daily"} className="w-28"/>
-                                                <Input label="Weekly Max" id={"weekly"} className="w-28"/>
-                                            </div>
-                                            <Select
-                                                label="Teacher"
-                                                placeholder="Select teacher"
-                                                labelPlacement="outside"
-                                                className="max-w-xs"
-                                                id={"teacher"}
-                                                selectedKeys={[addTeacher]}
-                                                onChange={(e) => {
-                                                    setAddTeacher(e.target.value)
-                                                }}
-                                                disableSelectorIconRotation
-                                            >
-                                                {teachers.map((teacher) => (
-                                                    <SelectItem key={teacher.id} value={JSON.stringify(teacher)}
-                                                                textValue={`${teacher.firstName} ${teacher.lastName}`}>
-                                                        {teacher.firstName} {teacher.lastName}
-                                                    </SelectItem>
-                                                ))}
-                                            </Select>
-                                            <Checkbox id={"consecutive"} className={"mt-4"}>Consecutive</Checkbox>
-                                        </CardBody>
-                                        <CardFooter className={"flex justify-between"}>
-                                            <Button color={"success"} variant={"solid"} onClick={() => {
-                                                addSubject({
-                                                    subject: document.getElementById("subject").value,
-                                                    daily: document.getElementById("daily").value,
-                                                    weekly: document.getElementById("weekly").value,
-                                                    consecutive: document.getElementById("consecutive")
-                                                });
-                                            }}>
-                                                Add Subject
-                                            </Button>
-                                        </CardFooter>
-                                    </Card>
-                                    {subjects.map((subject, index) => (
-
-                                        <Card key={index} className={"max-w-xs hover:bg-slate-50 w-96"}>
-                                            <CardHeader
-                                                className={`flex gap-3 ${secondaryColors[Math.floor(Math.random() * 7)]}`}>
-                                                <Input variant={"bordered"} className="text-xl font-medium"
-                                                       onChange={(e) => {
-                                                           handleChange(e, subject, index, false)
-                                                       }}
-                                                       defaultValue={subject.subject}/>
+                    <div>
+                        <h1 className={"font-semibold"}>Max Periods</h1>
+                        <div className={"flex flex-row gap-4 mt-4"}>
+                            {days.map((day, index) => (
+                                <CustomInput key={day.title} type={"number"} label={day.title} variant={"flat"}
+                                             defaultValue={day.default}
+                                             color={"secondary"}/>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <h1 className={"font-semibold"}>Subjects</h1>
+                        <div className={"flex gap-4"}>
+                            <div className={"grid grid-cols-4 gap-4 mt-4"}>
+                                {subjects ? (
+                                    <>
+                                        <Card className={"max-w-xs hover:bg-slate-50 w-96"}>
+                                            <CardHeader className={`flex gap-3`}>
+                                                <p className="text-md font-medium">Add Subject</p>
                                             </CardHeader>
                                             <Divider/>
                                             <CardBody>
+                                                <Input label="Subject" id={"subject"}/>
                                                 <div className={"flex gap-4 my-4"}>
-                                                    <Input label="Daily Max" defaultValue={subject.daily}
-                                                           onChange={(e) => {
-                                                               handleChange(e, subject, index, false)
-                                                           }}
-                                                           className="w-28"/>
-                                                    <Input label="Weekly Max" defaultValue={subject.weekly}
-                                                           onChange={(e) => {
-                                                               handleChange(e, subject, index, false)
-                                                           }}
-                                                           className="w-28"/>
+                                                    <Input label="Daily Max" id={"daily"} className="w-28"/>
+                                                    <Input label="Weekly Max" id={"weekly"} className="w-28"/>
                                                 </div>
                                                 <Select
                                                     label="Teacher"
                                                     placeholder="Select teacher"
                                                     labelPlacement="outside"
                                                     className="max-w-xs"
-                                                    disableSelectorIconRotation
-                                                    selectedKeys={[subject.teacher]}
+                                                    id={"teacher"}
+                                                    selectedKeys={[addTeacher]}
                                                     onChange={(e) => {
-                                                        handleTeacherChange(e, index)
+                                                        setAddTeacher(e.target.value)
                                                     }}
+                                                    disableSelectorIconRotation
                                                 >
                                                     {teachers.map((teacher) => (
                                                         <SelectItem key={teacher.id} value={JSON.stringify(teacher)}
@@ -262,26 +206,85 @@ function Generate(props) {
                                                         </SelectItem>
                                                     ))}
                                                 </Select>
-                                                <Checkbox onChange={(e) => {
-                                                    handleChange(e, subject, index, true)
-                                                }} className={"mt-4"} id={"consecutive"}
-                                                          defaultSelected={subject.consecutive}>Consecutive</Checkbox>
+                                                <Checkbox id={"consecutive"} className={"mt-4"}>Consecutive</Checkbox>
                                             </CardBody>
                                             <CardFooter className={"flex justify-between"}>
-                                                <DeleteIcon onClick={() => {
-                                                    deleteSubject(subject)
-                                                }}/>
+                                                <Button color={"success"} variant={"solid"} onClick={() => {
+                                                    addSubject({
+                                                        subject: document.getElementById("subject").value,
+                                                        daily: document.getElementById("daily").value,
+                                                        weekly: document.getElementById("weekly").value,
+                                                        consecutive: document.getElementById("consecutive")
+                                                    });
+                                                }}>
+                                                    Add Subject
+                                                </Button>
                                             </CardFooter>
                                         </Card>
-                                    ))}
-                                </>
-                            ) : (
-                                <p className={"text-md font-medium"}>No subjects added</p>
-                            )}
+                                        {subjects.map((subject, index) => (
+
+                                            <Card key={index} className={"max-w-xs hover:bg-slate-50 w-96"}>
+                                                <CardHeader
+                                                    className={`flex gap-3 ${secondaryColors[Math.floor(Math.random() * 7)]}`}>
+                                                    <Input variant={"bordered"} className="text-xl font-medium"
+                                                           onChange={(e) => {
+                                                               handleChange(e, subject, index, false)
+                                                           }}
+                                                           defaultValue={subject.subject}/>
+                                                </CardHeader>
+                                                <Divider/>
+                                                <CardBody>
+                                                    <div className={"flex gap-4 my-4"}>
+                                                        <Input label="Daily Max" defaultValue={subject.daily}
+                                                               onChange={(e) => {
+                                                                   handleChange(e, subject, index, false)
+                                                               }}
+                                                               className="w-28"/>
+                                                        <Input label="Weekly Max" defaultValue={subject.weekly}
+                                                               onChange={(e) => {
+                                                                   handleChange(e, subject, index, false)
+                                                               }}
+                                                               className="w-28"/>
+                                                    </div>
+                                                    <Select
+                                                        label="Teacher"
+                                                        placeholder="Select teacher"
+                                                        labelPlacement="outside"
+                                                        className="max-w-xs"
+                                                        disableSelectorIconRotation
+                                                        selectedKeys={[subject.teacher]}
+                                                        onChange={(e) => {
+                                                            handleTeacherChange(e, index)
+                                                        }}
+                                                    >
+                                                        {teachers.map((teacher) => (
+                                                            <SelectItem key={teacher.id} value={JSON.stringify(teacher)}
+                                                                        textValue={`${teacher.firstName} ${teacher.lastName}`}>
+                                                                {teacher.firstName} {teacher.lastName}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </Select>
+                                                    <Checkbox onChange={(e) => {
+                                                        handleChange(e, subject, index, true)
+                                                    }} className={"mt-4"} id={"consecutive"}
+                                                              defaultSelected={subject.consecutive}>Consecutive</Checkbox>
+                                                </CardBody>
+                                                <CardFooter className={"flex justify-between"}>
+                                                    <DeleteIcon onClick={() => {
+                                                        deleteSubject(subject)
+                                                    }}/>
+                                                </CardFooter>
+                                            </Card>
+                                        ))}
+                                    </>
+                                ) : (
+                                    <p className={"text-md font-medium"}>No subjects added</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </ScrollableFeed>
         </div>
     );
 }
