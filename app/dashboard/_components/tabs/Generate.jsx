@@ -21,6 +21,8 @@ import RegenerateIcon from "../../../../icons/RegenerateIcon";
 import AddIcon from "../../../../icons/AddIcon";
 import {Checkbox} from "@nextui-org/react";
 import ScrollableFeed from "react-scrollable-feed";
+import {Toaster, toast} from "react-hot-toast"
+import toastOptions from "../../../../config/toastOptions";
 
 function Generate(props) {
 
@@ -160,6 +162,7 @@ function Generate(props) {
     const generateTable = async () => {
         try {
             setLoading(true)
+            toast.success("Generating Table...", toastOptions.loading)
             const title = document.getElementById("title").value
             const standard = document.getElementById("standard").value
             const division = document.getElementById("division").value
@@ -182,7 +185,13 @@ function Generate(props) {
                 body: body
             });
             const data = await res.json();
+            if (data.status === "success") {
+                toast.success(data.msg, toastOptions.success)
+            } else {
+                toast.error("Could not generate table", toastOptions.error)
+            }
         } catch (e) {
+            toast.error("Could not generate table", toastOptions.error)
             console.log(e)
         } finally {
             setLoading(false)
@@ -200,6 +209,7 @@ function Generate(props) {
     return (
         <div className={"h-full"}>
             <h1 className={"text-xl font-bold"}>Generate</h1>
+            <div><Toaster position={"bottom-right"} /></div>
             <ScrollableFeed className={"h-full pb-40 overflow-y-scroll"}>
                 <div className={" flex flex-col py-7 gap-7"}>
                     <div className={"flex gap-4 flex-col md:flex-row "}>
