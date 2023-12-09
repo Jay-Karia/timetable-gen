@@ -114,7 +114,7 @@ function Generate(props) {
     }
 
     const generateTable = ()=> {
-
+        console.log()
     }
 
     useEffect(() => {
@@ -148,13 +148,12 @@ function Generate(props) {
         fetchTeachers()
     }, []);
 
-
     return (
         <div className={"h-full"}>
             <h1 className={"text-xl font-bold"}>Generate</h1>
             <ScrollableFeed className={"h-full pb-40 overflow-y-scroll"}>
                 <div className={" flex flex-col py-7 gap-7"}>
-                    <div className={"flex gap-4 "}>
+                    <div className={"flex gap-4 flex-col md:flex-row "}>
                         <Input
                             label="Title (Optional)"
                             variant="faded"
@@ -174,7 +173,7 @@ function Generate(props) {
                     </div>
                     <div>
                         <h1 className={"font-semibold"}>Max Periods</h1>
-                        <div className={"flex flex-row gap-4 mt-4"}>
+                        <div className={"gap-4 mt-4 flex flex-wrap"}>
                             {days.map((day, index) => (
                                 <CustomInput key={day.title} type={"number"} label={day.title} variant={"flat"}
                                              defaultValue={day.default}
@@ -185,7 +184,7 @@ function Generate(props) {
                     <div>
                         <h1 className={"font-semibold"}>Subjects</h1>
                         <div className={"flex gap-4"}>
-                            <div className={"grid grid-cols-4 gap-4 mt-4"}>
+                            <div className={"flex flex-wrap gap-4 mt-4"}>
                                 {subjects ? (
                                     <>
                                         <Card className={"max-w-xs hover:bg-slate-50 w-96"}>

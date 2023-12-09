@@ -38,16 +38,16 @@ function SpecificTable({id}) {
                     className={"font-bold"}>{table.title}</span> {table.standard}-{table.division}</h1>
                 <Table key={table.id} aria-label="Example static collection table" className={"mt-2"}>
                     <TableHeader className={"bg-slate-700"}>
-                        {table.data[0].map((row) => (
-                            <TableColumn>{row}</TableColumn>
+                        {table.data[0].map((row, index) => (
+                            <TableColumn key={index}>{row}</TableColumn>
                         ))}
 
                     </TableHeader>
                     <TableBody>
-                        {table.data.slice(1).map((row) => (
-                            <TableRow>
-                                {row.map((cell) => (
-                                    <TableCell >{cell}</TableCell>
+                        {table.data.slice(1).map((row, index) => (
+                            <TableRow key={index}>
+                                {row.map((cell, index) => (
+                                    <TableCell key={index}>{cell}</TableCell>
                                 ))}
                             </TableRow>
                         ))}
