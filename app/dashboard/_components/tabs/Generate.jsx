@@ -29,15 +29,7 @@ function Generate(props) {
     const [subjects, setSubjects] = useState([]);
     const [teachers, setTeachers] = useState([])
     const [addTeacher, setAddTeacher] = useState("")
-    const [table, setTable] = useState({
-        "id": "656f48a5233e1a9542325ce5",
-        "createdAt": "2023-12-05T15:58:29.169Z",
-        "data": [["Periods ", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", ""], ["Period 1", "chemistry", "engII", "engII", "chemistry", "chemistry", "computer", ""], ["Period 2", "maths", "maths", "chemistry", "computer", "physics", "engI", ""], ["Period 3", "chemistry", "physics", "maths", "engII", "chemistry", "physics", ""], ["Period 4", "PT", "maths", "chemistry", "chemistry", "engII", "engII", ""], ["Period 5", "engI", "chemistry", "physics", "engI", "computer", "physics", ""], ["Period 6", "computer", "engI", "engI", "maths", "engI", "maths", ""], ["Period 7", "computer", "chemistry", "maths", "physics", "physics", "", ""], ["Period 8", "engII", "computer", "physics", "maths", "maths", "", ""]],
-        "division": "A",
-        "standard": "11",
-        "title": "new title +1234+",
-        "updatedAt": "2023-12-05T15:58:29.169Z"
-    })
+    const [table, setTable] = useState(null)
     const [loading, setLoading] = useState(false)
 
     const days = [
@@ -46,7 +38,7 @@ function Generate(props) {
         {title: "Wednesday", default: "8"},
         {title: "Thursday", default: "8"},
         {title: "Friday", default: "8"},
-        {title: "Saturday", default: "6"},
+        {title: "Saturday", default: "4"},
         {title: "Sunday", default: "0"},
     ]
 
@@ -96,7 +88,7 @@ function Generate(props) {
         );
     };
 
-    const handleChange = (e, subject, index, checkbox) => {
+    const handleChange = (e, subject, index, checkbox, daily, weekly) => {
         if (checkbox) {
             setSubjects(
                 subjects.map((item, i) => {
@@ -115,18 +107,23 @@ function Generate(props) {
             setSubjects(
                 subjects.map((item, i) => {
                     if (i === index) {
-                        item.subject = e.target.value;
+                        if (daily)
+                            item.daily = e.target.value;
+                        else if (weekly)
+                            item.weekly = e.target.value;
+                        else
+                            item.subject = e.target.value;
                     }
                     return item;
                 }),
             )
-            subject.subject = e.target.value;
             localStorage.setItem(
                 "subjects",
                 JSON.stringify(subjects),
             );
         }
     }
+
 
     useEffect(() => {
         const localSubject = localStorage.getItem("subjects") === null ?
@@ -186,6 +183,7 @@ function Generate(props) {
             });
             const data = await res.json();
             if (data.status === "success") {
+                setTable(data)
                 toast.success(data.msg, toastOptions.success)
             } else {
                 toast.error("Could not generate table", toastOptions.error)
@@ -209,7 +207,7 @@ function Generate(props) {
     return (
         <div className={"h-full"}>
             <h1 className={"text-xl font-bold"}>Generate</h1>
-            <div><Toaster position={"bottom-right"} /></div>
+            <div><Toaster position={"bottom-right"}/></div>
             <ScrollableFeed className={"h-full pb-40 overflow-y-scroll"}>
                 <div className={" flex flex-col py-7 gap-7"}>
                     <div className={"flex gap-4 flex-col md:flex-row "}>
@@ -221,7 +219,8 @@ function Generate(props) {
                             className="max-w-xs"
                             id={"title"}
                         />
-                        <CustomInput type={"number"} label={"Standard"} placeholder={"1"} id={"standard"} variant={"faded"}/>
+                        <CustomInput type={"number"} label={"Standard"} placeholder={"1"} id={"standard"}
+                                     variant={"faded"}/>
                         <Input
                             type="text"
                             label="Division"
@@ -236,7 +235,8 @@ function Generate(props) {
                         <h1 className={"font-semibold"}>Max Periods</h1>
                         <div className={"gap-4 mt-4 flex flex-wrap"}>
                             {days.map((day, index) => (
-                                <CustomInput key={day.title} id={day.title} type={"number"} label={day.title} variant={"flat"}
+                                <CustomInput key={day.title} id={day.title} type={"number"} label={day.title}
+                                             variant={"flat"}
                                              defaultValue={day.default}
                                              color={"default"}/>
                             ))}
@@ -272,23 +272,27 @@ function Generate(props) {
                                                     disableSelectorIconRotation
                                                 >
                                                     {teachers.map((teacher) => (
-                                                        <SelectItem key={teacher.id} value={JSON.stringify(teacher)}
+                                                        <SelectItem key={teacher.id}
+                                                                    value={JSON.stringify(teacher)}
                                                                     textValue={`${teacher.firstName} ${teacher.lastName}`}>
                                                             {teacher.firstName} {teacher.lastName}
                                                         </SelectItem>
                                                     ))}
                                                 </Select>
-                                                <Checkbox id={"consecutive"} className={"mt-4"}>Consecutive</Checkbox>
+                                                <Checkbox id={"consecutive"}
+                                                          className={"mt-4"}>Consecutive</Checkbox>
                                             </CardBody>
                                             <CardFooter className={"flex justify-between"}>
-                                                <Button startContent={<AddIcon/>} color={"success"} variant={"solid"} onClick={() => {
-                                                    addSubject({
-                                                        subject: document.getElementById("subject").value,
-                                                        daily: document.getElementById("daily").value,
-                                                        weekly: document.getElementById("weekly").value,
-                                                        consecutive: document.getElementById("consecutive")
-                                                    });
-                                                }}>
+                                                <Button startContent={<AddIcon/>} color={"success"}
+                                                        variant={"solid"}
+                                                        onClick={() => {
+                                                            addSubject({
+                                                                subject: document.getElementById("subject").value,
+                                                                daily: document.getElementById("daily").value,
+                                                                weekly: document.getElementById("weekly").value,
+                                                                consecutive: document.getElementById("consecutive")
+                                                            });
+                                                        }}>
                                                     Add Subject
                                                 </Button>
                                             </CardFooter>
@@ -301,7 +305,7 @@ function Generate(props) {
 
                                                     <Input variant={"bordered"} className="text-xl font-medium"
                                                            onChange={(e) => {
-                                                               handleChange(e, subject, index, false)
+                                                               handleChange(e, subject, index, false, false, false)
                                                            }}
                                                            defaultValue={subject.subject}/>
                                                 </CardHeader>
@@ -310,12 +314,12 @@ function Generate(props) {
                                                     <div className={"flex gap-4 my-4"}>
                                                         <Input label="Daily Max" defaultValue={subject.daily}
                                                                onChange={(e) => {
-                                                                   handleChange(e, subject, index, false)
+                                                                   handleChange(e, subject, index, false, true, false)
                                                                }}
                                                                className="w-28"/>
                                                         <Input label="Weekly Max" defaultValue={subject.weekly}
                                                                onChange={(e) => {
-                                                                   handleChange(e, subject, index, false)
+                                                                   handleChange(e, subject, index, false, false, true)
                                                                }}
                                                                className="w-28"/>
                                                     </div>
@@ -331,7 +335,8 @@ function Generate(props) {
                                                         }}
                                                     >
                                                         {teachers.map((teacher) => (
-                                                            <SelectItem key={teacher.id} value={JSON.stringify(teacher)}
+                                                            <SelectItem key={teacher.id}
+                                                                        value={JSON.stringify(teacher)}
                                                                         textValue={`${teacher.firstName} ${teacher.lastName}`}>
                                                                 {teacher.firstName} {teacher.lastName}
                                                             </SelectItem>
@@ -358,14 +363,15 @@ function Generate(props) {
                     </div>
                     <div className={"space-y-4"}>
                         <h1 className={"font-semibold"}>Table</h1>
-                        <Button startContent={<RegenerateIcon/>} color={"secondary"} onClick={generateTable}>Generate</Button>
+                        <Button startContent={<RegenerateIcon/>} color={"secondary"}
+                                onClick={generateTable}>Generate</Button>
                         <div>
                             {table ? (
                                 <>
                                     <div className={"m-4"}>
-                                        <h1 className={"text-md"}><span
-                                            className={"font-bold"}>{table.title}</span> {table.standard}-{table.division}
-                                        </h1>
+                                        {/*<h1 className={"text-md"}><span*/}
+                                        {/*    className={"font-bold"}>{table.title}</span> {table.standard}-{table.division}*/}
+                                        {/*</h1>*/}
                                         <Table key={table.id} aria-label="Example static collection table"
                                                className={"mt-2"}>
                                             <TableHeader className={"bg-slate-700"}>
@@ -392,7 +398,8 @@ function Generate(props) {
                                                         startContent={<RegenerateIcon/>}
                                                         onClick={generateTable}>Regenerate</Button>
                                             </div>
-                                            <Button color={"primary"} variant={"bordered"} onClick={handleDownload}
+                                            <Button color={"primary"} variant={"bordered"}
+                                                    onClick={handleDownload}
                                                     startContent={<DownloadIcon/>}>Download</Button>
                                         </div>
                                     </div>
