@@ -1,7 +1,5 @@
 import {NextResponse} from "next/server";
-import {PrismaClient} from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../../prisma/client";
 
 function createTableTemplate(maxPeriods, data, days) {
     for (let g = 0; g < maxPeriods.max(); g++) {
