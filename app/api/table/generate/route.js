@@ -45,7 +45,7 @@ const addSubjects = (days, maxPeriods, data, periods) => {
 
 const isPeriodAvailable = (data, day, period) => {
     if (data[day + 1][period + 1] === undefined)
-        return data[day+1][period] === ""
+        return data[day + 1][period] === ""
     else
         return data[day + 1][period + 1] === ""
 }
@@ -70,8 +70,8 @@ const isTeacherAvailable = async (data, day, period, teacher, allTeachers) => {
     }
 }
 
-const checkSubjectLimits = (weeklyCounter, dailyCounter, subjects, random) => {
-    return weeklyCounter[random[0]] >= parseInt(subjects[random[0]].weekly) || dailyCounter[random[0]] >= parseInt(subjects[random[0]].daily)
+const checkSubjectLimits = (weeklyCounter, dailyCounter, subjects, j) => {
+    return weeklyCounter[j] >= parseInt(subjects[j].weekly) || dailyCounter[j] >= parseInt(subjects[j].daily)
 }
 
 export async function POST(req) {
@@ -104,6 +104,7 @@ export async function POST(req) {
     }
 
     // Assigning subjects
+    const unAssignedPeriods = []
     for (let i = 0; i < days.length; i++) { // each day
 
         // Initializing dailyCounter and consecutive
@@ -124,17 +125,31 @@ export async function POST(req) {
             const teacherAvailable = await isTeacherAvailable(data, i, k, subjects[random[0]].teacher, allTeachers)
             const subjectLimit = checkSubjectLimits(weeklyCounter, dailyCounter, subjects, random)
 
-            const canAssign = periodAvailable && teacherAvailable || teacherAvailable === undefined && !subjectLimit
+            const canAssign = periodAvailable && (teacherAvailable || teacherAvailable === undefined) && !subjectLimit
+
 
             if (canAssign) {
+                // consecutive periods
+                if (consecutive[random[0]]) {
+                    // generate logic to create 1 consecutive period
+                    let consecutivePeriod = genRandomNum(1, 0, totalSubjects - 1, false)
+                    while (consecutivePeriod[0] === random[0]) {
+                        consecutivePeriod = genRandomNum(1, 0, totalSubjects - 1, false)
+                    }
+                }
+
                 periods[i].push(subjects[random[0]].subject)
                 weeklyCounter[random[0]]++
                 dailyCounter[random[0]]++
+
             } else {
-                console.log(i, k, subjects[random[0]].subject)
+                unAssignedPeriods.push([i, k])
             }
         }
     }
+
+    // Assigning unassigned periods
+
 
     // Adding subjects to the table
     data = addSubjects(days, maxPeriods, data, periods)
