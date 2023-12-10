@@ -103,6 +103,10 @@ export async function POST(req) {
         weeklyCounter.push(0)
     }
 
+    // time
+    let time = 0
+    let maxTime = 100000
+
     // Assigning subjects
     const unAssignedPeriods = []
     for (let i = 0; i < days.length; i++) { // each day
@@ -119,6 +123,7 @@ export async function POST(req) {
         periods.push([])
 
         for (let k = 0; k < maxPeriods[i]; k++) { // each period
+            time++
             let random = genRandomNum(1, 0, totalSubjects - 1, false)
 
             const periodAvailable = isPeriodAvailable(data, i, k)
@@ -143,12 +148,13 @@ export async function POST(req) {
                 dailyCounter[random[0]]++
 
             } else {
-                unAssignedPeriods.push([i, k])
+                if (time > maxTime)
+                    break
+                else
+                    k--
             }
         }
     }
-
-    // Assigning unassigned periods
 
 
     // Adding subjects to the table
