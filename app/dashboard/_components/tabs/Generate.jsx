@@ -196,8 +196,35 @@ function Generate(props) {
         }
     }
 
-    const handleSave = () => {
-        alert("save")
+    const handleSave = async () => {
+        try {
+            toast.success("Saving Table...", toastOptions.loading)
+            const title = document.getElementById("title").value
+            const standard = document.getElementById("standard").value
+            const division = document.getElementById("division").value
+
+            const body = JSON.stringify({
+                title: title,
+                standard: standard,
+                division: division,
+                data: table
+            })
+
+            const res = await fetch("/api/table/save", {
+                method: "POST",
+                body: body
+            });
+            const data = await res.json();
+            if (data.status === "success") {
+                localStorage.setItem("table", JSON.stringify(data.table))
+                toast.success(data.msg, toastOptions.success)
+            } else {
+                toast.error("Could not save table", toastOptions.error)
+            }
+        } catch (e) {
+            toast.error("Could not save table", toastOptions.error)
+            console.log(e)
+        }
     }
 
     const handleDownload = () => {

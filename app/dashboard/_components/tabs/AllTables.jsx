@@ -6,7 +6,7 @@ import ScrollableFeed from "react-scrollable-feed";
 import {useRouter} from "next/navigation";
 
 function AllTables(props) {
-    const [tables, setTables] = useState([])
+    const [tables, setTables] = useState(null)
     const router = useRouter()
     const [loading, setLoading] = useState(false)
 
@@ -21,9 +21,9 @@ function AllTables(props) {
             try {
                 setLoading(true)
                 const localTables = localStorage.getItem("tables")
-                if (localTables) {
-                    setTables(JSON.parse(localTables))
-                } else {
+                // if (localTables) {
+                //     setTables(JSON.parse(localTables))
+                // } else {
                     const res = await fetch("/api/table", {cache: "force-cache"})
                     const data = await res.json()
 
@@ -31,7 +31,7 @@ function AllTables(props) {
                         setTables(data.tables)
                         localStorage.setItem("tables", JSON.stringify(data.tables))
                     }
-                }
+                // }
             } catch (e) {
                 console.log(e)
             } finally {
@@ -50,7 +50,7 @@ function AllTables(props) {
                 <h1 className={"text-2xl font-bold"}>Loading...</h1>
             </div>}
             {!loading && <ScrollableFeed className={"h-96 pb-44 overflow-y-scroll"}>
-                {tables.length > 0 && <div className={"grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-4"}>
+                {tables && <div className={"grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-4"}>
                     {tables.map((table) => (
                         <div key={table.id}
                              className={" p-4 rounded-lg hover:bg-slate-200 bg-slate-100 hover:cursor-pointer"}
